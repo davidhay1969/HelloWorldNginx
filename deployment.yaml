@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __IMAGE__
+  labels:
+    app: __IMAGE__
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: __IMAGE__
+  template:
+    metadata:
+      labels:
+        app: __IMAGE__
+    spec:
+      containers:
+        - name: hello-world-nginx
+          image: __REGISTRY__/__NAMESPACE__/__IMAGE__:__TAG__
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+      imagePullSecrets:
+       - name: __SECRET__
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: __IMAGE__
+  labels:
+    app: __IMAGE__
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+    - port: 80
+      targetPort: 80
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    app: __IMAGE__
